@@ -5,33 +5,58 @@ namespace boatFight
 {
     class Program
     {
-        private static void Main(string[] args)
-        { 
-            //magic number elimination station
-            const int NumberOfPlayers = 2;
-            List<Player> players = new List<Player>();
-            for (int i = 0; i < NumberOfPlayers; i++)
+        //magic number elimination station
+        const int NumberOfPlayers = 2;
+        public const int BoardSize = 5;
+
+        static List<Player> players = new List<Player>();
+
+        public static void CreatePlayers()
+        {
+            for (int i = 0; i<NumberOfPlayers; i++)
             {
-                players.Add(new Player(i + 1));
+                players.Add(new Player(i + 1, BoardSize));
             }
 
-            for (int i = 0; i < NumberOfPlayers; i++)
+            for (int i = 0; i<NumberOfPlayers; i++)
             {
                 Console.Write($"Player {players[i].PlayerNumber}, please enter your name. ");
                 string playerName = Console.ReadLine();
                 players[i].PlayerName = playerName;
             }
+        }
 
-            for (int i = 0; i < NumberOfPlayers; i++)
+        public static void PlaceShips()
+        {
+            foreach (Player player in players)
             {
                 Console.Clear();
-                Console.Write($"{players[i].PlayerName}, please enter your X coordinate, from 1 to DUMMY. ");
+                Console.Write($"{player.PlayerName}, please enter your X coordinate, from 1 to DUMMY. ");
                 int coordinateX = int.Parse(Console.ReadLine());
-                Console.Write($"{players[i].PlayerName}, please enter your Y coordinate, from 1 to DUMMY. ");
+                Console.Write($"{player.PlayerName}, please enter your Y coordinate, from 1 to DUMMY. ");
                 int coordinateY = int.Parse(Console.ReadLine());
-
-                players[i].CreateShip(coordinateX, coordinateY);
+                Console.WriteLine($"Placing ship at {coordinateX}, {coordinateY}.  Press key to continue.");
+                Console.ReadKey();
+                Console.Clear();
+                player.CreateShip(coordinateX, coordinateY);
             }
+        }
+
+        private static void Main(string[] args)
+        {
+            CreatePlayers();
+            PlaceShips();
+
+            bool GameOver = false;
+            do
+            {
+                foreach (Player player in players)
+                {
+                    GameOver = player.Fire();
+                    if (GameOver)
+                        break;
+                }
+            } while (!GameOver);
         }
     }
 }
