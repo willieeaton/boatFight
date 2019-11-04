@@ -31,15 +31,24 @@ namespace boatFight
             foreach (Player player in players)
             {
                 Console.Clear();
-                Console.Write($"{player.PlayerName}, please enter your X coordinate, from 1 to DUMMY. ");
-                int coordinateX = int.Parse(Console.ReadLine());
-                Console.Write($"{player.PlayerName}, please enter your Y coordinate, from 1 to DUMMY. ");
-                int coordinateY = int.Parse(Console.ReadLine());
-                Console.WriteLine($"Placing ship at {coordinateX}, {coordinateY}.  Press key to continue.");
+                int x = InputCoordinate($"{player.PlayerName}, please enter your X coordinate, from 1 to DUMMY. ");
+                int y = InputCoordinate($"{player.PlayerName}, please enter your Y coordinate, from 1 to DUMMY. ");
+                Console.WriteLine($"Placing ship at {OutputCoordinate(x)}, {OutputCoordinate(y)}.  Press key to continue.");
                 Console.ReadKey();
                 Console.Clear();
-                player.CreateShip(coordinateX, coordinateY);
+                player.CreateShip(x, y);
             }
+        }
+
+        public static int InputCoordinate(string prompt)
+        {
+            Console.Write(prompt + " ");
+            return int.Parse(Console.ReadLine()) - 1;
+        }
+
+        public static int OutputCoordinate(int coordinate)
+        {
+            return coordinate + 1;
         }
 
         private static void Main(string[] args)
@@ -52,7 +61,7 @@ namespace boatFight
             {
                 foreach (Player player in players)
                 {
-                    GameOver = player.Fire();
+                    GameOver = player.Fire(players);
                     if (GameOver)
                         break;
                 }

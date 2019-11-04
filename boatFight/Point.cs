@@ -3,15 +3,21 @@ namespace boatFight
 {
     public class Point
     {
-        private int _x;
-        private int _y;
+        public int X;
+        public int Y;
         public bool HasBoat = false;
         public bool HasBeenShot = false;
 
+        public bool GetShot()
+        {
+            HasBeenShot = true;
+            return HasBoat;
+        }
+
         public Point(int x, int y)
         {
-            _x = x;
-            _y = y;
+            X = x;
+            Y = y;
         }
     }
 }
