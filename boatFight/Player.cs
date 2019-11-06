@@ -24,15 +24,21 @@ namespace boatFight
 
         public bool Fire(List<Player> players)
         {
+            int shotX;
+            int shotY;
             GameBoard.ShotMapDisplay();
             Player opponent = players[OtherPlayerIndex()];
 
             Console.WriteLine($"Your player number is {_playerNumber}.");
             Console.WriteLine($"You opponent's index should be {OtherPlayerIndex()}.");
             Console.WriteLine($"Your oppnent's name should be {opponent.PlayerName}.");
-           
-            int shotX = Program.InputCoordinate($"{PlayerName}, enter X coordinate to shoot at. ");
-            int shotY = Program.InputCoordinate($"{PlayerName}, enter Y coordinate to shoot at. ");
+            bool validInput = false;
+            do
+            {
+                shotX = Program.InputCoordinate($"{PlayerName}, enter X coordinate to shoot at. ");
+                shotY = Program.InputCoordinate($"{PlayerName}, enter Y coordinate to shoot at. ");
+                validInput = opponent.GameBoard.CellExists(shotX, shotY);
+            } while (validInput == false);
 
             Point targetPoint = opponent.GameBoard.LocatePoint(shotX, shotY);
             bool theShotHit = targetPoint.GetShot();
@@ -42,7 +48,6 @@ namespace boatFight
                 Console.WriteLine("BOOM!!!  Hit!!!");
                 GameBoard.ShotMapDisplay();
             }
-
             else
             {
                 Console.WriteLine("Drat, it missed.");

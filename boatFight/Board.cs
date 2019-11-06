@@ -10,6 +10,16 @@ namespace boatFight
 
         public int BoardSize { get; set; }
 
+        public bool CellExists (int x, int y)
+        {
+            var pointQuery =
+                from pt in _points
+                where (pt.X == x) && (pt.Y == y)
+                select pt;
+
+            return pointQuery.ToArray<Point>().Length > 0;
+        }
+
         public Point LocatePoint(int x, int y)
         {
             var pointQuery =
