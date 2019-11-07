@@ -32,7 +32,7 @@ namespace boatFight
             Console.WriteLine($"Your player number is {_playerNumber}.");
             Console.WriteLine($"You opponent's index should be {OtherPlayerIndex()}.");
             Console.WriteLine($"Your oppnent's name should be {opponent.PlayerName}.");
-            bool validInput = false;
+            var validInput = false;
             do
             {
                 shotX = Program.InputCoordinate($"{PlayerName}, enter X coordinate to shoot at. ");
@@ -40,8 +40,8 @@ namespace boatFight
                 validInput = opponent.GameBoard.CellExists(shotX, shotY);
             } while (validInput == false);
 
-            Point targetPoint = opponent.GameBoard.LocatePoint(shotX, shotY);
-            bool theShotHit = targetPoint.GetShot();
+            var targetPoint = opponent.GameBoard.LocatePoint(shotX, shotY);
+            var theShotHit = targetPoint.GetShot();
 
             if(theShotHit)
             {

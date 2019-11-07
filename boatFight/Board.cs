@@ -17,7 +17,7 @@ namespace boatFight
                 where (pt.X == x) && (pt.Y == y)
                 select pt;
 
-            return pointQuery.ToArray<Point>().Length > 0;
+            return pointQuery.Any<Point>();
         }
 
         public Point LocatePoint(int x, int y)
@@ -45,12 +45,12 @@ namespace boatFight
             //this is subject to change but sounds good in my head
 
             /* alike so:
-             *   A B C D E
-             * 1|. . . . .
-             * 2|* * . . o
-             * 3|o o . . .
-             * 4|. . o . *
-             * 5|o . . . *
+             *   1 2 3 4 5
+             * A|. . . . .
+             * B|* * . . o
+             * C|o o . . .
+             * D|. . o . *
+             * E|o . . . *
              * */            
         }
 
