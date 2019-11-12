@@ -10,7 +10,7 @@ namespace boatFight
 
         public int BoardSize { get; set; }
 
-        public bool CellExists (int x, int y)
+        public bool CellExists(int x, int y)
         {
             var pointQuery =
                 from pt in _points
@@ -19,6 +19,12 @@ namespace boatFight
 
             return pointQuery.Any<Point>();
         }
+
+        public bool CellExists(Point location)
+        {
+            return CellExists(location.X, location.Y);
+        }
+
 
         public Point LocatePoint(int x, int y)
         {
@@ -33,11 +39,16 @@ namespace boatFight
             }
 
             return new Point(0, 0);
-    }
+        }
+
+        public Point LocatePoint(Point location)
+        {
+            return LocatePoint(location.X, location.Y);
+        }
 
         public void ShotMapDisplay()
         {
-            //display the board, with the following rules:
+            //TODO: display the board, with the following rules:
             //coordinates
             //'.' for unshot-at location
             //'*' for hits

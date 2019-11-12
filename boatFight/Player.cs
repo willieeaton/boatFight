@@ -18,14 +18,18 @@ namespace boatFight
             _ships = new Ship(x, y, this);
         }
 
+        public void CreateShip(Point location)
+        {
+            CreateShip(location.X, location.Y);
+        }
+
         public int OtherPlayerNumber() => (_playerNumber == 1) ? 2 : 1;
 
         public int OtherPlayerIndex() => (_playerNumber == 1) ? 1 : 0;
 
         public bool Fire(List<Player> players)
         {
-            int shotX;
-            int shotY;
+            Point shotLocation = new Point(-1, -1);
             GameBoard.ShotMapDisplay();
             Player opponent = players[OtherPlayerIndex()];
 
@@ -35,12 +39,11 @@ namespace boatFight
             var validInput = false;
             do
             {
-                shotX = Program.InputCoordinate($"{PlayerName}, enter X coordinate to shoot at. ");
-                shotY = Program.InputCoordinate($"{PlayerName}, enter Y coordinate to shoot at. ");
-                validInput = opponent.GameBoard.CellExists(shotX, shotY);
+                shotLocation = Point.InputCoordinates($"{PlayerName}, enter coordinates to shoot at. ", opponent.GameBoard);
+                validInput = opponent.GameBoard.CellExists(shotLocation);
             } while (validInput == false);
 
-            var targetPoint = opponent.GameBoard.LocatePoint(shotX, shotY);
+            var targetPoint = opponent.GameBoard.LocatePoint(shotLocation);
             var theShotHit = targetPoint.GetShot();
 
             if(theShotHit)

@@ -50,6 +50,34 @@ namespace boatFight
             return coordinates;
         }
 
+        public static Point InputCoordinates(string prompt)
+        {
+            var inputIsValid = false;
+            var shipLocation = new Point(-1, -1);
+            while (!inputIsValid)
+            {
+                Console.Write(prompt + " ");
+                shipLocation = AlphanumericToPoint(Console.ReadLine());
+                inputIsValid |= shipLocation.X > -1 && shipLocation.Y > -1;
+            }
+
+            return shipLocation;
+        }
+
+        public static Point InputCoordinates(string prompt, Board board)
+        {
+            var inputIsValid = false;
+            var shipLocation = new Point(-1, -1);
+            while (!inputIsValid)
+            {
+                shipLocation = InputCoordinates(prompt);
+                inputIsValid |= shipLocation.X < board.BoardSize && shipLocation.Y < board.BoardSize;
+            }
+
+            return shipLocation;
+        }
+
+
         public static string PointToAlphanumeric(int x, int y)
         {
             return PointToAlphanumeric(new Point(x, y));

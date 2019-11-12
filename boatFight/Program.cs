@@ -31,24 +31,12 @@ namespace boatFight
             foreach (Player player in players)
             {
                 Console.Clear();
-                int x = InputCoordinate($"{player.PlayerName}, please enter your X coordinate, from 1 to DUMMY. ");
-                int y = InputCoordinate($"{player.PlayerName}, please enter your Y coordinate, from 1 to DUMMY. ");
-                Console.WriteLine($"Placing ship at {OutputCoordinate(x)}, {OutputCoordinate(y)}.  Press key to continue.");
+                Point ShipLocation = Point.InputCoordinates($"{player.PlayerName}, please place your boat, {Point.PointToAlphanumeric(0, 0)} to {Point.PointToAlphanumeric(player.GameBoard.BoardSize - 1, player.GameBoard.BoardSize - 1)}. ", player.GameBoard);
+                Console.WriteLine($"Placing ship at {Point.PointToAlphanumeric(ShipLocation)}.  Press key to continue.");
                 Console.ReadKey();
                 Console.Clear();
-                player.CreateShip(x, y);
+                player.CreateShip(ShipLocation);
             }
-        }
-
-        public static int InputCoordinate(string prompt)
-        {
-            Console.Write(prompt + " ");
-            return int.Parse(Console.ReadLine()) - 1;
-        }
-
-        public static int OutputCoordinate(int coordinate)
-        {
-            return coordinate + 1;
         }
 
         private static void Main(string[] args)
