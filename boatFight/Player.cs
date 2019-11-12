@@ -30,12 +30,10 @@ namespace boatFight
         public bool Fire(List<Player> players)
         {
             Point shotLocation = new Point(-1, -1);
-            GameBoard.ShotMapDisplay();
             Player opponent = players[OtherPlayerIndex()];
 
-            Console.WriteLine($"Your player number is {_playerNumber}.");
-            Console.WriteLine($"You opponent's index should be {OtherPlayerIndex()}.");
-            Console.WriteLine($"Your oppnent's name should be {opponent.PlayerName}.");
+            GameBoard.ShotMapDisplay(opponent.GameBoard);
+
             var validInput = false;
             do
             {
@@ -49,7 +47,7 @@ namespace boatFight
             if(theShotHit)
             {
                 Console.WriteLine("BOOM!!!  Hit!!!");
-                GameBoard.ShotMapDisplay();
+                GameBoard.ShotMapDisplay(opponent.GameBoard);
             }
             else
             {
