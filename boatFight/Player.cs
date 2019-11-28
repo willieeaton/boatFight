@@ -5,9 +5,16 @@ namespace boatFight
 {
     public class Player
     {
-        private readonly int _playerNumber;
-        private Ship _ships;
+        protected readonly int _playerNumber;
+        protected Ship _ships;
         public Board GameBoard;
+
+        public Player(int playerNumber)
+        {
+            _playerNumber = playerNumber;
+            GameBoard = new Board(Program.BoardSize);
+        }
+
 
         public int PlayerNumber => _playerNumber;
 
@@ -59,12 +66,6 @@ namespace boatFight
             Console.Clear();
 
             return theShotHit; //placeholder.  return True if game is over; false otherwise.
-        }
-
-        public Player(int playerNumber, int boardSize)
-        {
-            _playerNumber = playerNumber;
-            GameBoard = new Board(boardSize);
         }
 
 
