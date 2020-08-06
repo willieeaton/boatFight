@@ -105,6 +105,65 @@ namespace boatFight
             }
         }
 
+                public void ShipMapDisplay(Board board)
+        {
+            char[] alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+                                'H', 'I', 'J', 'K', 'L', 'M', 'N',
+                                'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+                                'V', 'W', 'X', 'Y', 'Z' };
+
+            //generate top line
+
+            Console.Write("  ");
+            for (int i = 0; i < board.BoardSize; i++)
+            {
+                if (i < 9)
+                {
+                    Console.Write(' ');
+                }
+
+                Console.Write(i + 1);
+            }
+            Console.Write('\n');
+
+            //generate dashy top line like +---------
+
+            Console.Write("  +");
+            for (int i = 0; i < board.BoardSize; i++)
+            {
+                Console.Write("--");
+            }
+            Console.Write('\n');
+
+            //generate each line of actual content
+
+            for (int i = 0; i < board.BoardSize; i++)
+            {
+                //space, letter, pipe
+                Console.Write(" " + alphabet[i].ToString() + "|");
+
+                for (int j = 0; j < board.BoardSize; j++)
+                {
+                    //content.  . for empty, * for hit boat, o for healthy boat
+                    //then a space
+                    Point point = board.LocatePoint(j, i);
+                    if (point.HasBoat && point.HasBeenShot)
+                    {
+                        Console.Write("X ");
+                    }
+                    else if (point.HasBoat)
+                    {
+                        Console.Write("o ");
+                    }
+                    else 
+                    { 
+                    Console.Write(". ");
+                    }
+                }
+                Console.Write('\n');    
+            }
+        }
+
         public Board(int boardSize)
         {
             for (int i = 0; i < boardSize; i++)
