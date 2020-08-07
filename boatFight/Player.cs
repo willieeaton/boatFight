@@ -20,6 +20,16 @@ namespace boatFight
 
         public string PlayerName { get; set; }
 
+        public virtual void PlaceShip()
+        {
+            Console.Clear();
+            Point ShipLocation = Point.InputCoordinates($"{PlayerName}, please place your boat, {Point.PointToAlphanumeric(0, 0)} to {Point.PointToAlphanumeric(GameBoard.BoardSize - 1, GameBoard.BoardSize - 1)}. ", GameBoard);
+            Console.WriteLine($"Placing ship at {Point.PointToAlphanumeric(ShipLocation)}.  Press key to continue.");
+            Console.ReadKey();
+            Console.Clear();
+            CreateShip(ShipLocation);
+        }
+
         public void CreateShip(int x, int y)
         {
             _ships = new Ship(x, y, this);
@@ -39,7 +49,9 @@ namespace boatFight
             Point shotLocation = new Point(-1, -1);
             Player opponent = players[OtherPlayerIndex()];
 
+            GameBoard.ShipMapDisplay(GameBoard);
             GameBoard.ShotMapDisplay(opponent.GameBoard);
+            
 
             var validInput = false;
             do
@@ -67,7 +79,6 @@ namespace boatFight
 
             return theShotHit; //placeholder.  return True if game is over; false otherwise.
         }
-
 
     }
 }

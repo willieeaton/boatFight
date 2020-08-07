@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 namespace boatFight
 {
@@ -89,12 +90,17 @@ namespace boatFight
 
         public static void CreatePlayers()
         {
-            for (int i = 0; i<NumberOfPlayers; i++)
+            for (int i = 0; i < NumberOfHumanPlayers; i++)
             {
                 players.Add(new Player(i + 1));
             }
 
-            for (int i = 0; i<NumberOfPlayers; i++)
+            for (int i = NumberOfHumanPlayers; i < NumberOfPlayers; i++)
+            {
+                players.Add(new AI(i + 1, 1));
+            }
+
+            for (int i = 0; i < NumberOfHumanPlayers; i++)
             {
                 Console.Write($"Player {players[i].PlayerNumber}, please enter your name. ");
                 string playerName = Console.ReadLine();
@@ -106,12 +112,7 @@ namespace boatFight
         {
             foreach (Player player in players)
             {
-                Console.Clear();
-                Point ShipLocation = Point.InputCoordinates($"{player.PlayerName}, please place your boat, {Point.PointToAlphanumeric(0, 0)} to {Point.PointToAlphanumeric(player.GameBoard.BoardSize - 1, player.GameBoard.BoardSize - 1)}. ", player.GameBoard);
-                Console.WriteLine($"Placing ship at {Point.PointToAlphanumeric(ShipLocation)}.  Press key to continue.");
-                Console.ReadKey();
-                Console.Clear();
-                player.CreateShip(ShipLocation);
+                player.PlaceShip();
             }
         }
 
