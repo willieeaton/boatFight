@@ -44,7 +44,7 @@ namespace boatFight
 
         public int OtherPlayerIndex() => (_playerNumber == 1) ? 1 : 0;
 
-        public bool Fire(List<Player> players)
+        public virtual bool Fire(List<Player> players)
         {
             Point shotLocation = new Point(-1, -1);
             Player opponent = players[OtherPlayerIndex()];
