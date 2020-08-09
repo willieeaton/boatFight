@@ -39,11 +39,11 @@ namespace boatFight
             return newName;
         }
 
-        public override void PlaceShip()
-        {
-            Point ShipLocation = new Point((int)Math.Floor(GameBoard.BoardSize * _rand.NextDouble()), (int)Math.Floor(GameBoard.BoardSize * _rand.NextDouble()) );
-            CreateShip(ShipLocation);
-        }
+        //public override void PlaceShip(int shipLength)
+        //{
+        //    Point ShipLocation = new Point((int)Math.Floor(GameBoard.BoardSize * _rand.NextDouble()), (int)Math.Floor(GameBoard.BoardSize * _rand.NextDouble()) );
+        //    CreateShip(ShipLocation);
+        //}
 
         public override bool Fire(List<Player> players)
         {

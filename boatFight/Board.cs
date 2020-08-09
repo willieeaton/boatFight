@@ -172,6 +172,43 @@ namespace boatFight
             }
         }
 
+        /// <summary>
+        /// Checks if a boat can be placed given its constructing parameters
+        /// </summary>
+        /// <param name="x">X coordinate of rear of boat</param>
+        /// <param name="y">Y coordinate of rear of boat</param>
+        /// <param name="player">Player placing the ship</param>
+        /// <param name="xDirection">-1 for left, 1 for right, 0 for vertical</param>
+        /// <param name="yDirection">-1 for up, 1 for down, 0 for horizontal</param>
+        /// <param name="shipLength">Length of ship in points</param>
+        /// <returns>-1 for invalid point, -2 for occupied, 1 for OK</returns>
+        public int CanAddBoat(int x, int y, Player player, int xDirection, int yDirection, int shipLength)
+        {
+            var testPoints = new List<Point>();
+            for (int i = 0; i < shipLength; i++)
+            {
+                testPoints.Add(new Point(x + xDirection * i, y + yDirection * i));
+            }
+
+            foreach (Point p in testPoints)
+            {
+                if (!CellExists(p.X, p.Y))
+                {
+                    return -1;
+                }
+                else
+                {
+                    Point testPoint = LocatePoint(p);
+                    if (testPoint.HasBoat)
+                    {
+                        return -2;
+                    }
+                }
+            }
+
+            return 1;
+        }
+
         public Board(int boardSize)
         {
             for (int i = 0; i < boardSize; i++)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http.Headers;
 
 namespace boatFight
@@ -13,6 +14,8 @@ namespace boatFight
         public static int BoardSize;
         public static int NumberOfShips;
         public static int NumberOfHumanPlayers;
+        private static List<int> _shipSizes = new List<int>();
+        private static List<string> _shipDesignations = new List<String>();
 
         static List<Player> players = new List<Player>();
         private static void Main(string[] args)
@@ -44,6 +47,7 @@ namespace boatFight
             Console.WriteLine("Please select one of the following game modes.");
             Console.WriteLine("1. Quick (1 ship, 5x5 board)");
             Console.WriteLine("2. Traditional (5 ships, 10x10 board)");
+            Console.WriteLine("3. Large Ship Test Mode (1 ship, 8x8 board)");
 
             bool validInput = false;
             int menuChoice = 0;
@@ -51,7 +55,7 @@ namespace boatFight
             {
                 Console.Write("> ");
                 validInput = int.TryParse(Console.ReadLine(), out menuChoice);
-                if(menuChoice < 1 || menuChoice > 2)
+                if(menuChoice < 1 || menuChoice > 3)
                 {
                     validInput = false;
                 }
@@ -62,12 +66,28 @@ namespace boatFight
                 case 1:
                     BoardSize = 5;
                     NumberOfShips = 1;
+                    _shipSizes.AddRange(new List<int>() { 1 });
+                    _shipDesignations.AddRange(new List<string> { "Ship" });
                     break;
 
                 case 2:
-                default:
                     BoardSize = 10;
                     NumberOfShips = 5;
+                    _shipSizes.AddRange(new List<int>() {
+                        5, 4, 3, 3, 2 });
+                    _shipDesignations.AddRange(new List<string> { 
+                        "Carrier", "Battleship", "Cruiser", "Submarine", "Destroyer" });
+                    break;
+
+                case 3:
+                    BoardSize = 8;
+                    NumberOfShips = 1;
+                    _shipSizes.AddRange(new List<int>() { 4 });
+                    _shipDesignations.AddRange(new List<string> { "Battleship" });
+                    break;
+
+                default:
+
                     break;
             }
 
@@ -112,10 +132,14 @@ namespace boatFight
         {
             foreach (Player player in players)
             {
-                player.PlaceShip();
+                for (int i = 0; i < NumberOfShips; i++)
+                {
+                    player.PlaceShip(_shipSizes[i], _shipDesignations[i]);
+                }
             }
         }
 
+        public static bool IsValidDirection(int xDirection, int yDirection) => (xDirection * yDirection == 0 && Math.Abs(xDirection + yDirection) == 1);
 
     }
 }
