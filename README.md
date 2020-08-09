@@ -27,9 +27,11 @@ Be sure to practice good input validation by checking that players aren’t acci
 outside of the boundaries of the game board or on top of other ships. Also check that players don’t 
 accidentally guess locations that they’ve already guessed.
 
-###Implementation status
+##Implementation status
 
-Intend to break Treehouse prompt down into various GitHub Issues so I can implement them bit by bit.
-
-Right now the game does nearly nothing, and I cannot recommend anyone download it unless they want to
-see a struggling beginner's C# code.
+Getting pretty close to a fully playable game now!  Still need to implement:
+* Ship "health"
+* Shot validation
+* AI modes harder than pure-random
+* "Salvo" Mode
+* Error handling on coordinate input parsing
