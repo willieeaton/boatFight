@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace boatFight
@@ -38,12 +39,88 @@ namespace boatFight
 
             return newName;
         }
+        public override void PlaceShip(int shipLength, string shipDesignation)
+        {
+            Point ShipLocation;
+            int xDirection;
+            int yDirection;
+            Console.Clear();
+            var validInput = false;
+            do
+            {
+                ShipLocation = new Point(_rand.Next(0, GameBoard.BoardSize), _rand.Next(0, GameBoard.BoardSize));
+                (xDirection, yDirection) = EnterDirection(shipLength, ShipLocation);
+                if (Program.IsValidDirection(xDirection, yDirection))
+                {
+                    validInput = true;
+                }
+            } while (!validInput);
+            CreateShip(ShipLocation, xDirection, yDirection, shipLength, shipDesignation);
+        }
 
-        //public override void PlaceShip(int shipLength)
-        //{
-        //    Point ShipLocation = new Point((int)Math.Floor(GameBoard.BoardSize * _rand.NextDouble()), (int)Math.Floor(GameBoard.BoardSize * _rand.NextDouble()) );
-        //    CreateShip(ShipLocation);
-        //}
+        protected override (int, int) EnterDirection(int shipLength, Point startLocation)
+        {
+            (int, int) attemptedDirection = (0, 0);
+            int inputDirection;
+            if (shipLength > 1)
+            {
+                inputDirection = _rand.Next(1, 4);
+                switch (inputDirection)
+                {
+                    case 1:
+                        attemptedDirection = (1, 0);
+                        break;
+
+                    case 2:
+                        attemptedDirection = (0, 1);
+                        break;
+
+                    case 3:
+                        attemptedDirection = (-1, 0);
+                        break;
+
+                    case 4:
+                        attemptedDirection = (0, -1);
+                        break;
+
+                    default:
+                        return (0, 0);
+                }
+
+                int result = GameBoard.CanAddBoat(startLocation.X, startLocation.Y, this, attemptedDirection.Item1, attemptedDirection.Item2, shipLength);
+                switch (result)
+                {
+                    case 1:
+                        return attemptedDirection;
+
+                    case -1:
+                        InvalidPointReached();
+                        return (0, 0);
+
+                    case -2:
+                        OverlappingShipReached();
+                        return (0, 0);
+
+                    default:
+                        Console.WriteLine("Unknown result code.  Attempting to place ship.");
+                        return attemptedDirection;
+                }
+            }
+            else
+            {
+                return (1, 0);
+            }
+        }
+
+        public override void InvalidPointReached()
+        {
+            Debug.WriteLine("Hey, I tried to place a ship offstage, sorry");
+        }
+
+        public override void OverlappingShipReached()
+        {
+            Debug.WriteLine("Dang, my ships overlapped.");
+        }
 
         public override bool Fire(List<Player> players)
         {
@@ -85,8 +162,9 @@ namespace boatFight
 
             if (_difficultyLevel == 1)
             {
-                targetX = (int)Math.Floor(_rand.NextDouble() * opponent.GameBoard.BoardSize);
-                targetY = (int)Math.Floor(_rand.NextDouble() * opponent.GameBoard.BoardSize);
+                targetX = _rand.Next(0, opponent.GameBoard.BoardSize);
+                targetY = _rand.Next(0, opponent.GameBoard.BoardSize);
+                Debug.WriteLine($"Shot at {targetX}, {targetY} aka {Point.PointToAlphanumeric(targetX, targetY)}");
             }
             else
             {

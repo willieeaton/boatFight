@@ -23,7 +23,7 @@ namespace boatFight
 
         public virtual void PlaceShip(int shipLength, string shipDesignation)
         {
-            Point ShipLocation = new Point(0, 0);
+            Point ShipLocation;
             int xDirection;
             int yDirection; 
             Console.Clear();
@@ -46,7 +46,7 @@ namespace boatFight
             CreateShip(ShipLocation, xDirection, yDirection, shipLength, shipDesignation);
         }
 
-        (int, int) EnterDirection(int shipLength, Point startLocation)
+        protected virtual (int, int) EnterDirection(int shipLength, Point startLocation)
         {
             (int, int) attemptedDirection = (0, 0);
             int inputDirection;
@@ -114,12 +114,12 @@ namespace boatFight
             }
         }
 
-        public void InvalidPointReached()
+        public virtual void InvalidPointReached()
         {
             Console.WriteLine("This ship would extend off of the board!");
         }
 
-        public void OverlappingShipReached()
+        public virtual void OverlappingShipReached()
         {
             Console.WriteLine("This ship would overlap a ship already placed!");
         }
