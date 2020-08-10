@@ -6,6 +6,7 @@ namespace boatFight
         public int X;
         public int Y;
         public bool HasBoat { get; set; } = false;
+        public Ship BoatHere { get; set; }
         public bool HasBeenShot { get; set; } = false;
 
         public static Point AlphanumericToPoint(string coordinates)

@@ -9,12 +9,9 @@ namespace boatFight
         private readonly List<Point> _shipPoints = new List<Point>();
 
         private readonly int _shipLength;
-        private int _shipHealth;
         private readonly int _xDirection;
         private readonly int _yDirection;
         public readonly string ShipDesignation;
-
-        public bool IsAlive() => _shipHealth > 0;
 
         public Ship(int x, int y, Player player)
         {
@@ -22,7 +19,6 @@ namespace boatFight
             ShipLocation.HasBoat = true;
 
             _shipLength = 1;
-            _shipHealth = _shipLength;
             _xDirection = 1;
             _yDirection = 0;
 
@@ -35,7 +31,6 @@ namespace boatFight
         public Ship(int x, int y, Player player, int xDirection, int yDirection, int shipLength, string shipDesignation)
         {
             _shipLength = shipLength;
-            _shipHealth = _shipLength;
             _xDirection = xDirection;
             _yDirection = yDirection;
             ShipDesignation = shipDesignation;
@@ -44,15 +39,25 @@ namespace boatFight
             {
                 Point newPoint = player.GameBoard.LocatePoint(x + i * xDirection, y + i * yDirection);
                 newPoint.HasBoat = true;
+                newPoint.BoatHere = this;
                 _shipPoints.Add(newPoint);
             }
         }
 
         public int ShipHealth()
         {
+            int health = 0;
+            foreach (Point p in _shipPoints)
+            {
+                if(!p.HasBeenShot)
+                {
+                    health++;
+                }
+            }
 
-
-            return 0;
+            return health;
         }
+
+        public bool IsAlive() => ShipHealth() > 0;
     }
 }

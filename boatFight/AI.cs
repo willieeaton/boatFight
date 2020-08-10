@@ -177,19 +177,23 @@ namespace boatFight
 
             if (theShotHit)
             {
-                Console.WriteLine("BOOM!!!  Hit!!!");
-                GameBoard.ShotMapDisplay(opponent.GameBoard);
+                ProcessHit(targetPoint, players);
             }
             else
             {
                 Console.WriteLine("Drat, it missed.");
             }
 
+            if(opponent.AllShipsSunk())
+            {
+                Console.WriteLine($"All ships sunk!  {PlayerName} wins!");
+            }
+
             Console.WriteLine("Press a key to continue.");
             Console.ReadKey();
             Console.Clear();
 
-            return theShotHit; //placeholder.  return True if game is over; false otherwise.
+            return opponent.AllShipsSunk();
         }
 
         protected override void InvalidShotLocation()
@@ -200,6 +204,18 @@ namespace boatFight
         protected override void PointAlreadyShot()
         {
             Debug.WriteLine("Shot at a location that has already been shot at.");
+        }
+
+        protected override void ProcessHit(Point targetPoint, List<Player> players)
+        {
+            Player opponent = players[OtherPlayerIndex()];
+
+            Console.WriteLine("BOOM!!!  Hit!!!");
+
+            if (!targetPoint.BoatHere.IsAlive())
+            {
+                Console.WriteLine($"{PlayerName} sunk the {targetPoint.BoatHere.ShipDesignation}!");
+            }
         }
 
         private Point AIShot(List<Player> players)
