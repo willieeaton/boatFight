@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Net.NetworkInformation;
 
 namespace boatFight
 {
@@ -9,7 +10,7 @@ namespace boatFight
     {
         //magic number elimination station
         const int NumberOfPlayers = 2;
-
+        const int NumberOfAIDifficultyLevels = 3;
         //define statics
         public static int BoardSize;
         public static int NumberOfShips;
@@ -117,7 +118,7 @@ namespace boatFight
 
             for (int i = NumberOfHumanPlayers; i < NumberOfPlayers; i++)
             {
-                players.Add(new AI(i + 1, 1));
+                players.Add(new AI(i + 1, SelectAIDifficulty(i + 1)));
             }
 
             for (int i = 0; i < NumberOfHumanPlayers; i++)
@@ -141,5 +142,29 @@ namespace boatFight
 
         public static bool IsValidDirection(int xDirection, int yDirection) => (xDirection * yDirection == 0 && Math.Abs(xDirection + yDirection) == 1);
 
+        public static int SelectAIDifficulty (int playerNumber)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Difficulty options:");
+            Console.WriteLine("1) Beginner");
+            Console.WriteLine("2) Intermediate");
+            Console.WriteLine("3) Professional");
+            Console.WriteLine();
+            Console.Write($"Select a difficulty for player {playerNumber}. >");
+
+            int returnDifficulty;
+
+            bool validInput = false;
+            do
+            {
+                returnDifficulty = int.Parse(Console.ReadLine());
+                if(returnDifficulty >= 1 && returnDifficulty <= NumberOfAIDifficultyLevels)
+                {
+                    validInput = true;
+                }
+            } while (!validInput);
+
+            return returnDifficulty;
+        }
     }
 }

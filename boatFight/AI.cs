@@ -8,7 +8,19 @@ namespace boatFight
     public class AI : Player
     {
         private readonly int _difficultyLevel; //1 is full random
+
+        private struct Knowledge
+        {
+            bool onTheHunt;
+            bool hitLastShot;
+            Point lastShotLocation;
+            Point lastHitLocation;
+            int checkerboardOffset;
+        }
+        
         Random _rand = new Random();
+
+
 
         public AI(int playerNumber, int difficultyLevel) : base(playerNumber)
         {
@@ -28,6 +40,20 @@ namespace boatFight
                     nameOptions.AddRange(new List<string>()
                     {
                         "Rando McGuesser", "Wildcard", "Mystery Man"
+                    });
+                    break;
+
+                case 2:
+                    nameOptions.AddRange(new List<string>()
+                    {
+                        "Lt. Crackshot", "Tracker", "Strafeman"
+                    });
+                    break;
+
+                case 3:
+                    nameOptions.AddRange(new List<string>()
+                    {
+                        "Admiral Awesome", "Commodore Soixante-Quatre", "Ole Ironsights"
                     });
                     break;
 
@@ -184,6 +210,23 @@ namespace boatFight
 
             if (_difficultyLevel == 1)
             {
+                //Difficulty level 1: simply fires willy-nilly, at random.
+                targetX = _rand.Next(0, opponent.GameBoard.BoardSize);
+                targetY = _rand.Next(0, opponent.GameBoard.BoardSize);
+                Debug.WriteLine($"Shot at {targetX}, {targetY} aka {Point.PointToAlphanumeric(targetX, targetY)}");
+            }
+            else if (_difficultyLevel == 2)
+            {
+                //Difficulty level 2: fires willy-nilly until it hits something, then attempts
+                //to follow that ship and sink her.
+                targetX = _rand.Next(0, opponent.GameBoard.BoardSize);
+                targetY = _rand.Next(0, opponent.GameBoard.BoardSize);
+                Debug.WriteLine($"Shot at {targetX}, {targetY} aka {Point.PointToAlphanumeric(targetX, targetY)}");
+            }
+            else if (_difficultyLevel == 3)
+            {
+                //Difficulty level 3: fires randomly at a "checkerboard" pattern until it hits
+                //something, then attempts to follow that ship and sink her.
                 targetX = _rand.Next(0, opponent.GameBoard.BoardSize);
                 targetY = _rand.Next(0, opponent.GameBoard.BoardSize);
                 Debug.WriteLine($"Shot at {targetX}, {targetY} aka {Point.PointToAlphanumeric(targetX, targetY)}");

@@ -139,7 +139,6 @@ namespace boatFight
 
             GameBoard.ShipMapDisplay(GameBoard);
             GameBoard.ShotMapDisplay(opponent.GameBoard);
-            
 
             var validInput = false;
             do

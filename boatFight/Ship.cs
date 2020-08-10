@@ -48,5 +48,11 @@ namespace boatFight
             }
         }
 
+        public int ShipHealth()
+        {
+
+
+            return 0;
+        }
     }
 }
