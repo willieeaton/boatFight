@@ -114,12 +114,12 @@ namespace boatFight
             }
         }
 
-        public virtual void InvalidPointReached()
+        protected virtual void InvalidPointReached()
         {
             Console.WriteLine("This ship would extend off of the board!");
         }
 
-        public virtual void OverlappingShipReached()
+        protected virtual void OverlappingShipReached()
         {
             Console.WriteLine("This ship would overlap a ship already placed!");
         }
@@ -145,7 +145,19 @@ namespace boatFight
             do
             {
                 shotLocation = Point.InputCoordinates($"{PlayerName}, enter coordinates to shoot at. ", opponent.GameBoard);
-                validInput = opponent.GameBoard.CellExists(shotLocation);
+                shotLocation = opponent.GameBoard.LocatePoint(shotLocation);
+                if (!opponent.GameBoard.CellExists(shotLocation))
+                {
+                    InvalidShotLocation();
+                }
+                else if(shotLocation.HasBeenShot)
+                {
+                    PointAlreadyShot();
+                }
+                else
+                {
+                    validInput = true;
+                }
             } while (validInput == false);
 
             var targetPoint = opponent.GameBoard.LocatePoint(shotLocation);
@@ -166,6 +178,16 @@ namespace boatFight
             Console.Clear();
 
             return theShotHit; //placeholder.  return True if game is over; false otherwise.
+        }
+
+        protected virtual void InvalidShotLocation ()
+        {
+            Console.WriteLine("This location would be offboard.");
+        }
+
+        protected virtual void PointAlreadyShot ()
+        {
+            Console.WriteLine("This location has already been shot at!");
         }
 
     }

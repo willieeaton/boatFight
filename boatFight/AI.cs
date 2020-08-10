@@ -112,12 +112,12 @@ namespace boatFight
             }
         }
 
-        public override void InvalidPointReached()
+        protected override void InvalidPointReached()
         {
             Debug.WriteLine("Hey, I tried to place a ship offstage, sorry");
         }
 
-        public override void OverlappingShipReached()
+        protected override void OverlappingShipReached()
         {
             Debug.WriteLine("Dang, my ships overlapped.");
         }
@@ -130,8 +130,20 @@ namespace boatFight
             var validInput = false;
             do
             {
-                shotLocation = AIShot(players);  
-                validInput = opponent.GameBoard.CellExists(shotLocation);
+                shotLocation = AIShot(players);
+                shotLocation = opponent.GameBoard.LocatePoint(shotLocation);
+                if (!opponent.GameBoard.CellExists(shotLocation))
+                {
+                    InvalidShotLocation();
+                }
+                else if (shotLocation.HasBeenShot)
+                {
+                    PointAlreadyShot();
+                }
+                else
+                {
+                    validInput = true;
+                }
             } while (validInput == false);
 
             var targetPoint = opponent.GameBoard.LocatePoint(shotLocation);
@@ -152,6 +164,16 @@ namespace boatFight
             Console.Clear();
 
             return theShotHit; //placeholder.  return True if game is over; false otherwise.
+        }
+
+        protected override void InvalidShotLocation()
+        {
+            Debug.WriteLine("WARNING: Attempted to shoot invalid cell.");
+        }
+
+        protected override void PointAlreadyShot()
+        {
+            Debug.WriteLine("Shot at a location that has already been shot at.");
         }
 
         private Point AIShot(List<Player> players)
