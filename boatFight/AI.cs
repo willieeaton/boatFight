@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 
@@ -11,10 +12,10 @@ namespace boatFight
 
         public struct Knowledge
         {
-            public bool onTheHunt;
+            public bool onTheHunt; //true if actively pursuing a ship, until it is sunk
             public bool hitLastShot;
             public Point lastShotLocation;
-            public Point lastHitLocation;
+            public List<Point> lastHitLocations;
             public int checkerboardOffset;
         }
 
@@ -22,6 +23,7 @@ namespace boatFight
         {
             onTheHunt = false,
             hitLastShot = false,
+            lastHitLocations = new List<Point>()
         };
         
         Random _rand = new Random();
@@ -32,7 +34,7 @@ namespace boatFight
         {
             _difficultyLevel = difficultyLevel;
             PlayerName = nameMe();
-            knowledge.checkerboardOffset = _rand.Next(0, 1);
+            knowledge.checkerboardOffset = _rand.Next(0, 2);
         }
 
         private string nameMe()
@@ -180,6 +182,7 @@ namespace boatFight
             } while (validInput == false);
 
             var targetPoint = opponent.GameBoard.LocatePoint(shotLocation);
+            knowledge.lastShotLocation = targetPoint;
             var theShotHit = targetPoint.GetShot();
 
             if (theShotHit)
@@ -217,11 +220,17 @@ namespace boatFight
         {
             Player opponent = players[OtherPlayerIndex()];
 
+            knowledge.onTheHunt = true;
+            knowledge.hitLastShot = true;
+            knowledge.lastHitLocations.Add(targetPoint);
+
             Console.WriteLine("BOOM!!!  Hit!!!");
 
             if (!targetPoint.BoatHere.IsAlive())
             {
                 Console.WriteLine($"{PlayerName} sunk the {targetPoint.BoatHere.ShipDesignation}!");
+                knowledge.onTheHunt = false;
+                knowledge.lastHitLocations.RemoveAll(p => p.HasBeenShot);
             }
         }
 
@@ -234,25 +243,33 @@ namespace boatFight
             if (_difficultyLevel == 1)
             {
                 //Difficulty level 1: simply fires willy-nilly, at random.
-                targetX = _rand.Next(0, opponent.GameBoard.BoardSize);
-                targetY = _rand.Next(0, opponent.GameBoard.BoardSize);
-                Debug.WriteLine($"Shot at {targetX}, {targetY} aka {Point.PointToAlphanumeric(targetX, targetY)}");
+                (targetX, targetY) = ShootRandom(players);
             }
             else if (_difficultyLevel == 2)
             {
                 //Difficulty level 2: fires willy-nilly until it hits something, then attempts
                 //to follow that ship and sink her.
-                targetX = _rand.Next(0, opponent.GameBoard.BoardSize);
-                targetY = _rand.Next(0, opponent.GameBoard.BoardSize);
-                Debug.WriteLine($"Shot at {targetX}, {targetY} aka {Point.PointToAlphanumeric(targetX, targetY)}");
+                if (knowledge.onTheHunt)
+                {
+                    (targetX, targetY) = ProwlForShips(players);
+                }
+                else
+                {
+                    (targetX, targetY) = ShootRandom(players);
+                }
             }
             else if (_difficultyLevel == 3)
             {
                 //Difficulty level 3: fires randomly at a "checkerboard" pattern until it hits
                 //something, then attempts to follow that ship and sink her.
-                targetX = _rand.Next(0, opponent.GameBoard.BoardSize);
-                targetY = _rand.Next(0, opponent.GameBoard.BoardSize);
-                Debug.WriteLine($"Shot at {targetX}, {targetY} aka {Point.PointToAlphanumeric(targetX, targetY)}");
+                if (knowledge.onTheHunt)
+                {
+                    (targetX, targetY) = ProwlForShips(players);
+                }
+                else
+                {
+                    (targetX, targetY) = ShootCheckerboard(players);
+                }
             }
             else
             {
@@ -260,7 +277,115 @@ namespace boatFight
                 targetY = -1;
             }
 
+            Debug.WriteLine($"Shot at {targetX}, {targetY} aka {Point.PointToAlphanumeric(targetX, targetY)}");
+
             return new Point(targetX, targetY);
+        }
+
+        private (int, int) ShootRandom(List<Player> players)
+        {
+            Player opponent = players[OtherPlayerIndex()];
+
+            return (_rand.Next(0, opponent.GameBoard.BoardSize), _rand.Next(0, opponent.GameBoard.BoardSize));
+        }
+
+        private (int, int) ShootCheckerboard(List<Player> players)
+        {
+            Player opponent = players[OtherPlayerIndex()];
+            int targetX;
+            int targetY;
+
+            do
+            {
+                (targetX, targetY) = ShootRandom(players);
+            } while ((targetX + targetY) % 2 != knowledge.checkerboardOffset);
+
+            return (targetX, targetY);
+        }
+
+        private (int, int) ProwlForShips(List<Player> players)
+        {
+            Player opponent = players[OtherPlayerIndex()];
+            var candidatePoints = new List<Point>();
+            int targetX;
+            int targetY;
+            
+            if(knowledge.lastHitLocations.Count == 1)
+            {
+                candidatePoints.Add(new Point(knowledge.lastHitLocations[0].X - 1, knowledge.lastHitLocations[0].Y));
+                candidatePoints.Add(new Point(knowledge.lastHitLocations[0].X + 1, knowledge.lastHitLocations[0].Y));
+                candidatePoints.Add(new Point(knowledge.lastHitLocations[0].X, knowledge.lastHitLocations[0].Y - 1));
+                candidatePoints.Add(new Point(knowledge.lastHitLocations[0].X, knowledge.lastHitLocations[0].Y + 1));
+
+                candidatePoints.RemoveAll(p => p.X < 0 || p.Y < 0 || p.X >= opponent.GameBoard.BoardSize || p.Y >= opponent.GameBoard.BoardSize);
+
+                for(int i = 0; i < candidatePoints.Count; i++)
+                {
+                    candidatePoints[i] = opponent.GameBoard.LocatePoint(candidatePoints[i]);
+                }
+
+                candidatePoints.RemoveAll(p => p.HasBeenShot);
+            }
+            else
+            {
+                int xDirection = knowledge.lastHitLocations[0].X - knowledge.lastHitLocations[1].X;
+
+                if (xDirection == 0)
+                {
+                    targetX = knowledge.lastHitLocations[0].X;
+                    for (int i = 0; i < opponent.GameBoard.BoardSize; i++)
+                    {
+                        Point testPoint = opponent.GameBoard.LocatePoint(targetX, i);
+                        if (!testPoint.HasBeenShot)
+                        {
+                            candidatePoints.Add(testPoint);
+                        }
+                    }
+                }
+                else
+                {
+                    targetY = knowledge.lastHitLocations[0].Y;
+                    for (int i = 0; i < opponent.GameBoard.BoardSize; i++)
+                    {
+                        Point testPoint = opponent.GameBoard.LocatePoint(i, targetY);
+                        if (!testPoint.HasBeenShot)
+                        {
+                            candidatePoints.Add(testPoint);
+                        }
+                    }
+                }
+            }
+            (targetX, targetY) = GetNearestTarget(candidatePoints);
+
+            return (targetX, targetY);
+        }
+
+        private (int, int) GetNearestTarget(List<Point> candidatePoints)
+        {
+            var nearestDistance = 999;
+            foreach(Point p in candidatePoints)
+            {
+                var distance = Math.Abs(knowledge.lastHitLocations[0].X - p.X + knowledge.lastHitLocations[0].Y - p.Y);
+                nearestDistance = Math.Min(nearestDistance, distance);
+            }
+
+            candidatePoints.RemoveAll(p => Math.Abs(knowledge.lastHitLocations[0].X - p.X + knowledge.lastHitLocations[0].Y - p.Y) > nearestDistance);  
+
+            while(candidatePoints.Count > 1) //pick a random point from equals
+            {
+                candidatePoints.RemoveAt(_rand.Next(0, candidatePoints.Count));
+            }
+
+            if (candidatePoints.Count == 1)
+            {
+                return (candidatePoints[0].X, candidatePoints[0].Y);
+            }
+            else //if it gets confused, stop hunting and return (0, 0)
+            {
+                knowledge.onTheHunt = false;
+                knowledge.lastHitLocations.RemoveAll(p => p.HasBeenShot);
+                return (0, 0);
+            }
         }
     }
 
