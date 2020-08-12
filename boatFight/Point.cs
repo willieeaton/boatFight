@@ -13,7 +13,11 @@ namespace boatFight
         {
             var yPreParse = coordinates.ToUpper()[0];
             var xPreParse = coordinates.Substring(1);
-            var x = int.Parse(xPreParse) - 1;
+            int x = -1;
+            if (int.TryParse(xPreParse, out x))
+            {
+                x--;
+            }
             int y = -1;
             char[] alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G',
                                 'H', 'I', 'J', 'K', 'L', 'M', 'N',
@@ -28,7 +32,14 @@ namespace boatFight
                 }
             }
 
-            return new Point(x, y);
+            if (x > -1 && y > -1)
+            {
+                return new Point(x, y);
+            }
+            else
+            {
+                return new Point(-1, -1);
+            }
         }
 
         public static string PointToAlphanumeric(Point point)

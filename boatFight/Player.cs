@@ -61,10 +61,12 @@ namespace boatFight
                 var validInput = false;
                 do
                 {
-                    inputDirection = int.Parse(Console.ReadLine());
-                    if (inputDirection >= 1 && inputDirection <= 4)
+                    if(int.TryParse(Console.ReadLine(), out inputDirection))
                     {
-                        validInput = true;
+                        if (inputDirection >= 1 && inputDirection <= 4)
+                        {
+                            validInput = true;
+                        }
                     }
                 } while (!validInput);
                 switch(inputDirection)

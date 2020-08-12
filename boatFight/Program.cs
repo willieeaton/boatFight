@@ -158,10 +158,12 @@ namespace boatFight
             bool validInput = false;
             do
             {
-                returnDifficulty = int.Parse(Console.ReadLine());
-                if(returnDifficulty >= 1 && returnDifficulty <= NumberOfAIDifficultyLevels)
+                if (int.TryParse(Console.ReadLine(), out returnDifficulty))
                 {
-                    validInput = true;
+                    if (returnDifficulty >= 1 && returnDifficulty <= NumberOfAIDifficultyLevels)
+                    {
+                        validInput = true;
+                    }
                 }
             } while (!validInput);
 
