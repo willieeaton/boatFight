@@ -134,7 +134,7 @@ namespace boatFight
 
         public int OtherPlayerIndex() => (_playerNumber == 1) ? 1 : 0;
 
-        public virtual bool Fire(List<Player> players)
+        public virtual bool Fire(List<Player> players, int shotNumber, int numberOfShots)
         {
             Point shotLocation = new Point(-1, -1);
             Player opponent = players[OtherPlayerIndex()];
@@ -145,7 +145,8 @@ namespace boatFight
             var validInput = false;
             do
             {
-                shotLocation = Point.InputCoordinates($"{PlayerName}, enter coordinates to shoot at. ", opponent.GameBoard);
+                var promptString = numberOfShots == 1 ? "enter coordinates to shoot at." : $"enter coordinates for shot {shotNumber} out of {numberOfShots}.";
+                shotLocation = Point.InputCoordinates($"{PlayerName}, {promptString} ", opponent.GameBoard);
                 shotLocation = opponent.GameBoard.LocatePoint(shotLocation);
                 if (!opponent.GameBoard.CellExists(shotLocation))
                 {
@@ -208,17 +209,30 @@ namespace boatFight
             }
         }
 
-        public bool AllShipsSunk ()
+        public int RemainingShips ()
         {
-            foreach (Ship s in _ships)
+            int shipsLeft = 0;
+            foreach(Ship s in _ships)
             {
-                if(s.IsAlive())
+                if (s.IsAlive())
                 {
-                    return false;
-                }    
+                    shipsLeft++;
+                }
             }
 
-            return true;
+            return shipsLeft;
+        }
+
+        public bool AllShipsSunk ()
+        {
+            if (RemainingShips() == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

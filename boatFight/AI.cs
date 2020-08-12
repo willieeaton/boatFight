@@ -157,7 +157,7 @@ namespace boatFight
             Debug.WriteLine("Dang, my ships overlapped.");
         }
 
-        public override bool Fire(List<Player> players)
+        public override bool Fire(List<Player> players, int shotNumber, int numberOfShots)
         {
             Point shotLocation = new Point(-1, -1);
             Player opponent = players[OtherPlayerIndex()];

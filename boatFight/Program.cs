@@ -15,6 +15,7 @@ namespace boatFight
         public static int BoardSize;
         public static int NumberOfShips;
         public static int NumberOfHumanPlayers;
+        public static bool SalvoMode;
         private static List<int> _shipSizes = new List<int>();
         private static List<string> _shipDesignations = new List<String>();
 
@@ -33,9 +34,13 @@ namespace boatFight
             {
                 foreach (Player player in players)
                 {
-                    if (!GameOver)
+                    var numberOfShots = SalvoMode ? player.RemainingShips() : 1;
+                    for (int i = 1; i <= numberOfShots; i++)
                     {
-                        GameOver = player.Fire(players);
+                        if (!GameOver)
+                        {
+                            GameOver = player.Fire(players, i, numberOfShots);
+                        }
                     }
                 }
             } while (!GameOver);
@@ -49,7 +54,7 @@ namespace boatFight
             Console.WriteLine("Please select one of the following game modes.");
             Console.WriteLine("1. Quick (1 ship, 5x5 board)");
             Console.WriteLine("2. Traditional (5 ships, 10x10 board)");
-            Console.WriteLine("3. Large Ship Test Mode (1 ship, 8x8 board)");
+            Console.WriteLine("3. Salvo (Traditional, with one shot each turn per unsunk ship)");
 
             bool validInput = false;
             int menuChoice = 0;
@@ -68,6 +73,7 @@ namespace boatFight
                 case 1:
                     BoardSize = 5;
                     NumberOfShips = 1;
+                    SalvoMode = false;
                     _shipSizes.AddRange(new List<int>() { 1 });
                     _shipDesignations.AddRange(new List<string> { "Ship" });
                     break;
@@ -75,6 +81,7 @@ namespace boatFight
                 case 2:
                     BoardSize = 10;
                     NumberOfShips = 5;
+                    SalvoMode = false;
                     _shipSizes.AddRange(new List<int>() {
                         5, 4, 3, 3, 2 });
                     _shipDesignations.AddRange(new List<string> { 
@@ -82,10 +89,13 @@ namespace boatFight
                     break;
 
                 case 3:
-                    BoardSize = 8;
-                    NumberOfShips = 1;
-                    _shipSizes.AddRange(new List<int>() { 4 });
-                    _shipDesignations.AddRange(new List<string> { "Battleship" });
+                    BoardSize = 10;
+                    NumberOfShips = 5;
+                    SalvoMode = true;
+                    _shipSizes.AddRange(new List<int>() {
+                        5, 4, 3, 3, 2 });
+                    _shipDesignations.AddRange(new List<string> {
+                        "Carrier", "Battleship", "Cruiser", "Submarine", "Destroyer" });
                     break;
 
                 default:
@@ -151,7 +161,7 @@ namespace boatFight
             Console.WriteLine("2) Intermediate");
             Console.WriteLine("3) Professional");
             Console.WriteLine();
-            Console.Write($"Select a difficulty for player {playerNumber}. >");
+            Console.Write($"Select a difficulty for player {playerNumber}. ");
 
             int returnDifficulty;
 
