@@ -33,9 +33,10 @@ namespace boatFight
             {
                 foreach (Player player in players)
                 {
-                    GameOver = player.Fire(players);
-                    if (GameOver)
-                        break;
+                    if (!GameOver)
+                    {
+                        GameOver = player.Fire(players);
+                    }
                 }
             } while (!GameOver);
 

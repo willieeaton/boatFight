@@ -9,14 +9,20 @@ namespace boatFight
     {
         private readonly int _difficultyLevel; //1 is full random
 
-        private struct Knowledge
+        public struct Knowledge
         {
-            bool onTheHunt;
-            bool hitLastShot;
-            Point lastShotLocation;
-            Point lastHitLocation;
-            int checkerboardOffset;
+            public bool onTheHunt;
+            public bool hitLastShot;
+            public Point lastShotLocation;
+            public Point lastHitLocation;
+            public int checkerboardOffset;
         }
+
+        Knowledge knowledge = new Knowledge()
+        {
+            onTheHunt = false,
+            hitLastShot = false,
+        };
         
         Random _rand = new Random();
 
@@ -26,6 +32,7 @@ namespace boatFight
         {
             _difficultyLevel = difficultyLevel;
             PlayerName = nameMe();
+            knowledge.checkerboardOffset = _rand.Next(0, 1);
         }
 
         private string nameMe()
