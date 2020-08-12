@@ -1,37 +1,14 @@
-﻿#BoatFight
+# Boat Fight
 
 A game based on the classic board game Battleship, made in C#.
 
-The program is based on this prompt from Treehouse, at the end of the C# Basics course:
+## Feature
 
-##Battleship
+A little console app to play Battleship with friends or against CPUs.
+* 0 to 2 players
+* Three difficulty settings for CPUs
+* "Quick" (5x5, one ship), traditional, and "Salvo" (one shot per ship) mode
 
-Recreate a computer console based version of the popular Battleship game. At a minimum, you’ll want to have 
-classes for player, ship, and board. You might want to make other classes as well.
+## Background
 
-Start by making a two player game where each player has only one ship that takes up a single grid 
-square on the game board. Players should be able select where they want to place their ships.
-
-The game board is typically a 10x10 grid, but you might want to make the game board smaller to start out. 
-You should be able to change the game board size by changing the value of a single constant.
-
-You may also want to provide a single player option where you play against the computer. Use 
-System.Random to randomly place the computer’s ships and to guess the location of its opponent’s ships. 
-Think about ways you can make the computer a more challenging opponent by making it “smarter”.
-
-You can continue to make the game more complex and interesting by adding more types of ships 
-or allowing the ships to move. Come up with more ways to make the game more interesting and challenging 
-and then implement them in your game.
-
-Be sure to practice good input validation by checking that players aren’t accidentally placing ships 
-outside of the boundaries of the game board or on top of other ships. Also check that players don’t 
-accidentally guess locations that they’ve already guessed.
-
-##Implementation status
-
-Getting pretty close to a fully playable game now!  Still need to implement:
-* Ship "health"
-* Shot validation
-* AI modes harder than pure-random
-* "Salvo" Mode
-* Error handling on coordinate input parsing
+The program is based on a prompt from the Treehouse course "C# Basics." 
