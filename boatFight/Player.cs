@@ -171,7 +171,7 @@ namespace boatFight
             }
             else
             {
-                Console.WriteLine("Drat, it missed.");
+                Console.WriteLine("Missed...");
             }
 
             if (opponent.AllShipsSunk())
@@ -201,7 +201,6 @@ namespace boatFight
             Player opponent = players[OtherPlayerIndex()];
 
             Console.WriteLine("BOOM!!!  Hit!!!");
-            GameBoard.ShotMapDisplay(opponent.GameBoard);
 
             if(!targetPoint.BoatHere.IsAlive())
             {

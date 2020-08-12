@@ -15,7 +15,7 @@ namespace boatFight
             public bool onTheHunt; //true if actively pursuing a ship, until it is sunk
             public bool hitLastShot;
             public Point lastShotLocation;
-            public List<Point> lastHitLocations;
+            public List<Point> lastHitLocations;    
             public int checkerboardOffset;
         }
 
@@ -191,7 +191,7 @@ namespace boatFight
             }
             else
             {
-                Console.WriteLine("Drat, it missed.");
+                Console.WriteLine("Missed...");
             }
 
             if(opponent.AllShipsSunk())

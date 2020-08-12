@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 
 namespace boatFight
 {
@@ -22,10 +23,19 @@ namespace boatFight
         static List<Player> players = new List<Player>();
         private static void Main(string[] args)
         {
-            GameTypeSelect();
-            CreatePlayers();
-            PlaceShips();
-            GameLoop();
+            bool donePlaying = false;
+
+            WelcomeScreen();
+
+            do
+            {
+                ClearMemory();
+                GameTypeSelect();
+                CreatePlayers();
+                PlaceShips();
+                GameLoop();
+                donePlaying = !PlayAgainPrompt();
+            } while (!donePlaying);
         }
         public static void GameLoop()
         {
@@ -49,8 +59,6 @@ namespace boatFight
 
         public static void GameTypeSelect()
         {
-            Console.WriteLine("Welcome to Boat Fight!");
-            Console.WriteLine();
             Console.WriteLine("Please select one of the following game modes.");
             Console.WriteLine("1. Quick (1 ship, 5x5 board)");
             Console.WriteLine("2. Traditional (5 ships, 10x10 board)");
@@ -178,6 +186,34 @@ namespace boatFight
             } while (!validInput);
 
             return returnDifficulty;
+        }
+
+        public static bool PlayAgainPrompt ()
+        {
+            Console.WriteLine("Play another game?  (Y/N)");
+            string playAgain = Console.ReadLine().ToUpper();
+            if (playAgain[0] == 'Y')
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static void ClearMemory ()
+        {
+            players.RemoveAll(p => p.ToString() != "");
+            _shipDesignations.RemoveAll(p => p != "");
+            _shipSizes.RemoveAll(p => p != 0);
+        }
+
+        public static void WelcomeScreen ()
+        {
+            Console.Clear();
+            Console.WriteLine("Welcome to Boat Fight!");
+            Console.WriteLine("An open-source game based on the board game Battleship.");
+            Console.WriteLine("By P. Willie Eaton.");
+            Console.WriteLine("Version v1, released 2020, August 12, 18:38 EDT.");
+            Console.WriteLine();
         }
     }
 }
